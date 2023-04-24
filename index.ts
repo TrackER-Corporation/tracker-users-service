@@ -19,3 +19,6 @@ app.use(
 
 connectToDatabase()
 app.listen(port, () => console.info(`tracker-users-service is running`));
+
+
+export default { app }

@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import app from "../index"
-
-const request = require('supertest');
+import request from 'supertest';
 
 describe('GET /', () => {
     it('should respond with a JSON object containing a message', async () => {

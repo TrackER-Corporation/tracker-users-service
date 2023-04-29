@@ -1,6 +1,9 @@
 import jwt from 'jsonwebtoken'
 import asyncHandler from 'express-async-handler'
 import { collections } from '../db/services/database.service'
+import dotenv from "dotenv"
+
+dotenv.config()
 
 export const protect = asyncHandler(async (req: any, res: any, next: any) => {
   let token

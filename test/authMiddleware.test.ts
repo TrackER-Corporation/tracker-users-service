@@ -1,16 +1,16 @@
 import jwt from 'jsonwebtoken';
-import { collections } from '../db/services/database.service';
-import { beforeAll, beforeEach, describe, expect, it, test, vi } from 'vitest';
+import { beforeAll, beforeEach, describe, expect, test, vi } from 'vitest';
 import { protect } from '../middleware/authMiddleware';
 import dotenv from "dotenv"
 
-dotenv.config()
 
 describe('protect middleware', () => {
     let req: any, res: any, next: any, token: any;
     let collections: any;
 
     beforeAll(() => {
+        dotenv.config()
+
         collections = {
             users: {
                 findById: vi.fn(),

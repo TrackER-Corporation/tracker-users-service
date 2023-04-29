@@ -18,7 +18,7 @@ export const registerUser = asyncHandler(async (req: any, res: any) => {
   // Check if user exists
   const userExists = await collections?.users?.findOne({ email: email })
   if (userExists != null) {
-    res.status(401)
+    res.status(400)
     return
   }
 
@@ -96,7 +96,7 @@ export const getUserById = asyncHandler(async (req: any, res: any) => {
   let myQuery = { _id: new ObjectId(req.params.id) };
   const user = await collections?.users?.findOne(myQuery);
   if (!user) {
-    res.status(401)
+    res.status(400)
   } else {
     res.status(200).json(user)
   }
@@ -113,7 +113,7 @@ export const updateUserById = asyncHandler(async (req: any, res: any) => {
   const user = await collections?.users?.findOne(new ObjectId(req.params.id))
 
   if (!user) {
-    res.status(401)
+    res.status(400)
     return
   }
 
@@ -142,7 +142,7 @@ export const updateUserPasswordById = asyncHandler(async (req: any, res: any) =>
   const user = await collections?.users?.findOne(new ObjectId(req.params.id))
 
   if (!user) {
-    res.status(401)
+    res.status(400)
     return
   }
 
@@ -172,7 +172,7 @@ export const deleteUserById = asyncHandler(async (req: any, res: any) => {
   }
   const user = await collections?.users?.findOne({ _id: new ObjectId(req.params.id) })
   if (!user) {
-    res.status(401)
+    res.status(400)
     return
   }
 

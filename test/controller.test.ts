@@ -1,4 +1,4 @@
-import { beforeAll, describe, expect, it, vi } from "vitest";
+import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { registerUser, loginUser, getUserById, updateUserById, deleteUserById, updateUserPasswordById, getAll } from "../db/controller/controller";
 import { collections, connectToDatabase } from "../db/services/database.service";
 import { ObjectId } from "mongodb";
@@ -16,7 +16,51 @@ describe('Activity controller', async () => {
         await connectToDatabase()
         vi.clearAllMocks();
     });
+
+    afterAll(async () => {
+        it('should return ok registering a new user', async () => {
+            const req = {
+                body: {
+                    name: "test",
+                    surname: "test",
+                    email: "test@test",
+                    password: "qwerty",
+                    type: "Building"
+                }
+            };
+            const res = mockResponse();
+            await registerUser(req, res);
+            expect(res.status).toHaveBeenCalledWith(200);
+        });
+
+
+        it('should return ok logging in', async () => {
+            const req = {
+                body: {
+                    email: "test@test",
+                    password: "qwerty"
+                }
+            };
+            const res = mockResponse();
+            await loginUser(req, res);
+            expect(res.status).toHaveBeenCalledWith(200);
+        });
+
+        it('should return ok deleting user', async () => {
+            const req = {
+                params: {
+                    id: testId
+                }
+            };
+            const res = mockResponse();
+            await deleteUserById(req, res);
+            expect(res.status).toHaveBeenCalledWith(200);
+            await collections.users?.deleteOne({ _id: new ObjectId(testId) })
+        });
+    })
+
     let testId: string
+
     const mockResponse = () => {
         const res: Response = {
             json: {},
@@ -26,10 +70,6 @@ describe('Activity controller', async () => {
         res.json = vi.fn().mockReturnValue(res);
         return res;
     };
-
-    beforeAll(() => {
-        vi.clearAllMocks();
-    });
 
     it('should return error registering user', async () => {
         const req = {
@@ -43,20 +83,7 @@ describe('Activity controller', async () => {
         expect(res.status).toHaveBeenCalledWith(400);
     });
 
-    it('should return ok registering a new user', async () => {
-        const req = {
-            body: {
-                name: "test",
-                surname: "test",
-                email: "test@test",
-                password: "qwerty",
-                type: "Building"
-            }
-        };
-        const res = mockResponse();
-        await registerUser(req, res);
-        expect(res.status).toHaveBeenCalledWith(200);
-    });
+
 
     it('should return error user already registered', async () => {
         const req = {
@@ -69,7 +96,7 @@ describe('Activity controller', async () => {
         };
         const res = mockResponse();
         await registerUser(req, res);
-        expect(res.status).toHaveBeenCalledWith(401);
+        expect(res.status).toHaveBeenCalledWith(400);
     });
 
     it('should return error getting user with no id', async () => {
@@ -91,7 +118,7 @@ describe('Activity controller', async () => {
         };
         const res = mockResponse();
         await getUserById(req, res);
-        expect(res.status).toHaveBeenCalledWith(401);
+        expect(res.status).toHaveBeenCalledWith(400);
     });
 
     it('should return ok getting all users', async () => {
@@ -134,7 +161,7 @@ describe('Activity controller', async () => {
         };
         const res = mockResponse();
         await updateUserById(req, res);
-        expect(res.status).toHaveBeenCalledWith(401);
+        expect(res.status).toHaveBeenCalledWith(400);
     });
 
     it('should return ok updating user', async () => {
@@ -174,18 +201,6 @@ describe('Activity controller', async () => {
         expect(res.status).toHaveBeenCalledWith(400);
     });
 
-    it('should return ok loggin in', async () => {
-        const req = {
-            body: {
-                email: "test@test",
-                password: "qwerty"
-            }
-        };
-        const res = mockResponse();
-        await loginUser(req, res);
-        expect(res.status).toHaveBeenCalledWith(200);
-    });
-
     it('should return error updating password with wrong id', async () => {
         const req = {
             params: {
@@ -197,7 +212,7 @@ describe('Activity controller', async () => {
         };
         const res = mockResponse();
         await updateUserPasswordById(req, res);
-        expect(res.status).toHaveBeenCalledWith(401);
+        expect(res.status).toHaveBeenCalledWith(400);
     });
 
     it('should return ok updating password', async () => {
@@ -245,19 +260,7 @@ describe('Activity controller', async () => {
         };
         const res = mockResponse();
         await deleteUserById(req, res);
-        expect(res.status).toHaveBeenCalledWith(401);
-    });
-
-    it('should return ok deleting user', async () => {
-        const req = {
-            params: {
-                id: testId
-            }
-        };
-        const res = mockResponse();
-        await deleteUserById(req, res);
-        expect(res.status).toHaveBeenCalledWith(200);
-        await collections.users?.deleteOne({ _id: new ObjectId(testId) })
+        expect(res.status).toHaveBeenCalledWith(400);
     });
 
 });

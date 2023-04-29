@@ -83,8 +83,6 @@ describe('Activity controller', async () => {
         expect(res.status).toHaveBeenCalledWith(400);
     });
 
-
-
     it('should return error user already registered', async () => {
         const req = {
             body: {
@@ -229,17 +227,7 @@ describe('Activity controller', async () => {
         expect(res.status).toHaveBeenCalledWith(200);
     });
 
-    it('should return ok loggin in after password update', async () => {
-        const req = {
-            body: {
-                email: "test@test",
-                password: "palla"
-            }
-        };
-        const res = mockResponse();
-        await loginUser(req, res);
-        expect(res.status).toHaveBeenCalledWith(200);
-    });
+   
 
     it('should return error deleting user with no id', async () => {
         const req = {

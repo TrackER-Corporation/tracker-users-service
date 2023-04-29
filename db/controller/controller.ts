@@ -2,7 +2,6 @@ import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
 import asyncHandler from 'express-async-handler'
 import { collections } from '../services/database.service'
-import * as http from "http"
 
 const ObjectId = require("mongodb").ObjectId;
 // @desc    Register new user
@@ -17,7 +16,7 @@ export const registerUser = asyncHandler(async (req: any, res: any) => {
   }
 
   // Check if user exists
-  const userExists = await collections.users!.findOne({ email: email })
+  const userExists = await collections?.users?.findOne({ email: email })
   if (userExists != null) {
     res.status(401)
     return
@@ -28,7 +27,7 @@ export const registerUser = asyncHandler(async (req: any, res: any) => {
   const hashedPassword = await bcrypt.hash(password, salt)
 
   // Create user
-  const user: any = await collections.users!.insertOne({
+  const user: any = await collections?.users?.insertOne({
     name,
     surname,
     email,
@@ -58,7 +57,7 @@ export const loginUser = asyncHandler(async (req: any, res: any) => {
   const { email, password } = req.body
 
   // Check for user email
-  const user = await collections.users!.findOne({ email })
+  const user = await collections?.users?.findOne({ email })
   const resa = await bcrypt.compare(password, user?.password)
   if (user && resa) {
     res.status(200).json({
@@ -72,7 +71,6 @@ export const loginUser = asyncHandler(async (req: any, res: any) => {
     })
   } else {
     res.status(400)
-    return
   }
 })
 
@@ -96,10 +94,9 @@ export const getUserById = asyncHandler(async (req: any, res: any) => {
     return
   }
   let myQuery = { _id: new ObjectId(req.params.id) };
-  const user = await collections.users!.findOne(myQuery);
+  const user = await collections?.users?.findOne(myQuery);
   if (!user) {
     res.status(401)
-    return
   } else {
     res.status(200).json(user)
   }
@@ -113,7 +110,7 @@ export const updateUserById = asyncHandler(async (req: any, res: any) => {
     res.status(400)
     return
   }
-  const user = await collections.users!.findOne(new ObjectId(req.params.id))
+  const user = await collections?.users?.findOne(new ObjectId(req.params.id))
 
   if (!user) {
     res.status(401)
@@ -125,7 +122,7 @@ export const updateUserById = asyncHandler(async (req: any, res: any) => {
     res.status(402)
     return
   }
-  const updatedUser = await collections.users!.findOneAndUpdate(
+  const updatedUser = await collections?.users?.findOneAndUpdate(
     { _id: new ObjectId(req.params.id) },
     { $set: { ...req.body } },
     { returnDocument: 'after' }
@@ -142,7 +139,7 @@ export const updateUserPasswordById = asyncHandler(async (req: any, res: any) =>
     return
   }
   const { password } = req.body
-  const user = await collections.users!.findOne(new ObjectId(req.params.id))
+  const user = await collections?.users?.findOne(new ObjectId(req.params.id))
 
   if (!user) {
     res.status(401)
@@ -157,7 +154,7 @@ export const updateUserPasswordById = asyncHandler(async (req: any, res: any) =>
   const salt = await bcrypt.genSalt(10)
   const hashedPassword = await bcrypt.hash(password, salt)
 
-  const updatedUserPassword = await collections.users!.findOneAndUpdate(
+  const updatedUserPassword = await collections?.users?.findOneAndUpdate(
     { _id: new ObjectId(req.params.id) },
     { $set: { password: hashedPassword } },
     { returnDocument: 'after' }
@@ -173,7 +170,7 @@ export const deleteUserById = asyncHandler(async (req: any, res: any) => {
     res.status(400)
     return
   }
-  const user = await collections.users!.findOne({ _id: new ObjectId(req.params.id) })
+  const user = await collections?.users?.findOne({ _id: new ObjectId(req.params.id) })
   if (!user) {
     res.status(401)
     return
@@ -191,7 +188,7 @@ export const deleteUserById = asyncHandler(async (req: any, res: any) => {
 })
 
 export const getAll = asyncHandler(async (req: any, res: any) => {
-  const goal = await collections.users!.find({}).toArray()
-  if (goal.length > 0)
+  const goal = await collections?.users?.find({}).toArray()
+  if (goal!.length > 0)
     res.status(200).json(goal)
 })

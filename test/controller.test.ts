@@ -1,8 +1,10 @@
 import { beforeAll, describe, expect, it, vi } from "vitest";
-import { registerUser, loginUser, getMe, getUserById, updateUserById, deleteUserById, updateUserPasswordById, getAll } from "../db/controller/controller";
+import { registerUser, loginUser, getUserById, updateUserById, deleteUserById, updateUserPasswordById, getAll } from "../db/controller/controller";
 import { collections, connectToDatabase } from "../db/services/database.service";
 import { ObjectId } from "mongodb";
+import dotenv from 'dotenv';
 
+dotenv.config();
 
 interface Response {
     status: number | any
@@ -14,7 +16,7 @@ describe('Activity controller', async () => {
         await connectToDatabase()
         vi.clearAllMocks();
     });
-    let testId : string
+    let testId: string
     const mockResponse = () => {
         const res: Response = {
             json: {},
@@ -32,8 +34,8 @@ describe('Activity controller', async () => {
     it('should return error registering user', async () => {
         const req = {
             body: {
-                name: "test", 
-                surname: "test", 
+                name: "test",
+                surname: "test",
             }
         };
         const res = mockResponse();
@@ -59,8 +61,8 @@ describe('Activity controller', async () => {
     it('should return error user already registered', async () => {
         const req = {
             body: {
-                name: "test2", 
-                surname: "test2", 
+                name: "test2",
+                surname: "test2",
                 email: "test@test",
                 password: "qwerty2"
             }
@@ -97,7 +99,7 @@ describe('Activity controller', async () => {
         const res = mockResponse();
         await getAll(req, res);
         expect(res.status).toHaveBeenCalledWith(200);
-        if (res.json.calls[0][0].at(-1).email === "test@test"){
+        if (res.json.calls[0][0].at(-1).email === "test@test") {
             testId = res.json.calls[0][0].at(-1)._id.toString()
         }
     });
@@ -255,7 +257,7 @@ describe('Activity controller', async () => {
         const res = mockResponse();
         await deleteUserById(req, res);
         expect(res.status).toHaveBeenCalledWith(200);
-        await collections.users?.deleteOne({ _id : new ObjectId(testId)})
+        await collections.users?.deleteOne({ _id: new ObjectId(testId) })
     });
 
 });

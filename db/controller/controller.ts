@@ -3,10 +3,10 @@ import bcrypt from 'bcryptjs'
 import asyncHandler from 'express-async-handler'
 import { collections } from '../services/database.service'
 
-const ObjectId = require("mongodb").ObjectId;
 // @desc    Register new user
 // @route   POST /api/users
 // @access  Public
+const ObjectId = require("mongodb").ObjectId;
 export const registerUser = asyncHandler(async (req: any, res: any) => {
   const { name, surname, email, password, type } = req.body
 

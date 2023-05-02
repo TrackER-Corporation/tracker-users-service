@@ -6,27 +6,21 @@ import dotenv from "dotenv"
 dotenv.config()
 
 describe('protect middleware', () => {
-    let req: any, res: any, next: any, token: any;
-    let collections: any;
-    beforeAll(() => {
-
-
-        collections = {
-            users: {
-                findById: vi.fn(),
-            },
-        };
-        req = {
-            headers: {},
-            user: null,
-        };
-        res = {
-            status: vi.fn().mockReturnThis(),
-            send: vi.fn(),
-        };
-        next = vi.fn();
-        token = jwt.sign({ id: '123' }, process.env.JWT_SECRET as string);
-    });
+    const collections = {
+        users: {
+            findById: vi.fn(),
+        },
+    };
+    const req: any = {
+        headers: {},
+        user: null,
+    };
+    const res: any = {
+        status: vi.fn().mockReturnThis(),
+        send: vi.fn(),
+    };
+    const next = vi.fn();
+    const token = jwt.sign({ id: '123' }, process.env.JWT_SECRET as string);
 
     test('should call next if token is valid', async () => {
         req.headers.authorization = `Bearer ${token}`;

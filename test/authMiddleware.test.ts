@@ -3,11 +3,11 @@ import { beforeAll, describe, expect, test, vi } from 'vitest';
 import { protect } from '../middleware/authMiddleware';
 import dotenv from "dotenv"
 
+dotenv.config()
 
 describe('protect middleware', () => {
     let req: any, res: any, next: any, token: any;
     let collections: any;
-    dotenv.config()
     beforeAll(() => {
 
 

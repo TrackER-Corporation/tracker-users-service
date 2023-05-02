@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { beforeAll, beforeEach, describe, expect, test, vi } from 'vitest';
+import { beforeAll, describe, expect, test, vi } from 'vitest';
 import { protect } from '../middleware/authMiddleware';
 import dotenv from "dotenv"
 
@@ -7,9 +7,9 @@ import dotenv from "dotenv"
 describe('protect middleware', () => {
     let req: any, res: any, next: any, token: any;
     let collections: any;
-
+    dotenv.config()
     beforeAll(() => {
-        dotenv.config()
+
 
         collections = {
             users: {
@@ -32,12 +32,7 @@ describe('protect middleware', () => {
         req.headers.authorization = `Bearer ${token}`;
         const user = { id: '123', name: 'John Doe', email: 'john@example.com' };
         vi.spyOn(collections.users, 'findById').mockResolvedValue(user);
-        const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
-
         await protect(req, res, next);
-
-        // expect(req.user).toEqual(user);
-        // expect(collections.users?.findById).toHaveBeenCalledWith(decoded.id);
         expect(next).toHaveBeenCalled();
     });
 

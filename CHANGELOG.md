@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.1.0](https://github.com/TrackER-Corporation/tracker-users-service/compare/v1.0.0...v1.1.0) (2023-05-02)
+
+
+### Features
+
+* connection and route to db ([6242496](https://github.com/TrackER-Corporation/tracker-users-service/commit/62424969fb22fbb25a61c46a73373a9c20b3b73a))
+* finish setup ([f1a6890](https://github.com/TrackER-Corporation/tracker-users-service/commit/f1a689022c5bf5c9444abc5522d9ad398c82b680))
+* update dependencies ([5d8b925](https://github.com/TrackER-Corporation/tracker-users-service/commit/5d8b925f7ae1bec7d250abebae9e200fc2aa11a2))
+
+
+### Bug Fixes
+
+* add dotenv in test ([dfcf888](https://github.com/TrackER-Corporation/tracker-users-service/commit/dfcf888cc3bf3d644787cfd06e8cdb7ebead116f))
+* api return code ([607fdb7](https://github.com/TrackER-Corporation/tracker-users-service/commit/607fdb7fe71aa5021db5826180f9701bf3e481fd))
+* code smell ([42c3cde](https://github.com/TrackER-Corporation/tracker-users-service/commit/42c3cdec9e8d8d9117bd4d52fd4b5657f288369e))
+* Jwt token ([f6b2dd5](https://github.com/TrackER-Corporation/tracker-users-service/commit/f6b2dd5e8398b337748bfe6265b3ddcaa1cb7996))
+* move dotenv out functions ([f1813cd](https://github.com/TrackER-Corporation/tracker-users-service/commit/f1813cd25176a2175d3268b774eb777c982097eb))
+
 ## 1.0.0 (2023-04-24)
 
 

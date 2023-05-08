@@ -12,14 +12,14 @@ export const registerUser = asyncHandler(async (req: any, res: any) => {
 
   if (!name || !surname || !email || !password) {
     res.status(400)
-    return
+    throw new Error('Invalid user data')
   }
 
   // Check if user exists
   const userExists = await collections?.users?.findOne({ email: email })
   if (userExists != null) {
     res.status(400)
-    return
+    throw new Error('Invalid user data')
   }
 
   // Hash password
@@ -58,10 +58,10 @@ export const loginUser = asyncHandler(async (req: any, res: any) => {
 
   // Check for user email
   const user = await collections?.users?.findOne({ email })
-  const resa = await bcrypt.compare(password, user?.password)
-  if (user && resa) {
+  const crypt = await bcrypt.compare(password, user?.password)
+  if (user && crypt) {
     res.status(200).json({
-      _id: user.id,
+      _id: user._id,
       name: user.name,
       surname: user.surname,
       email: user.email,
@@ -71,6 +71,7 @@ export const loginUser = asyncHandler(async (req: any, res: any) => {
     })
   } else {
     res.status(400)
+    throw new Error('Invalid user data')
   }
 })
 
@@ -91,7 +92,7 @@ const generateToken = (id: any) => {
 export const getUserById = asyncHandler(async (req: any, res: any) => {
   if (!req.params.id) {
     res.status(400)
-    return
+    throw new Error('Invalid user data')
   }
   let myQuery = { _id: new ObjectId(req.params.id) };
   const user = await collections?.users?.findOne(myQuery);
@@ -108,19 +109,19 @@ export const getUserById = asyncHandler(async (req: any, res: any) => {
 export const updateUserById = asyncHandler(async (req: any, res: any) => {
   if (!req.params.id) {
     res.status(400)
-    return
+    throw new Error('Invalid user data')
   }
   const user = await collections?.users?.findOne(new ObjectId(req.params.id))
 
   if (!user) {
     res.status(400)
-    return
+    throw new Error('Invalid user data')
   }
 
   // Make sure the logged in user matches the goal user
   if (user._id.toString() !== new ObjectId(req.params.id).toString()) {
     res.status(402)
-    return
+    throw new Error('Invalid user data')
   }
   const updatedUser = await collections?.users?.findOneAndUpdate(
     { _id: new ObjectId(req.params.id) },
@@ -136,20 +137,20 @@ export const updateUserById = asyncHandler(async (req: any, res: any) => {
 export const updateUserPasswordById = asyncHandler(async (req: any, res: any) => {
   if (!req.params.id) {
     res.status(400)
-    return
+    throw new Error('Invalid user data')
   }
   const { password } = req.body
   const user = await collections?.users?.findOne(new ObjectId(req.params.id))
 
   if (!user) {
     res.status(400)
-    return
+    throw new Error('Invalid user data')
   }
 
   // Make sure the logged in user matches the goal user
   if (user._id.toString() !== new ObjectId(req.params.id).toString()) {
     res.status(402)
-    return
+    throw new Error('Invalid user data')
   }
   const salt = await bcrypt.genSalt(10)
   const hashedPassword = await bcrypt.hash(password, salt)
@@ -168,12 +169,12 @@ export const updateUserPasswordById = asyncHandler(async (req: any, res: any) =>
 export const deleteUserById = asyncHandler(async (req: any, res: any) => {
   if (!req.params.id) {
     res.status(400)
-    return
+    throw new Error('Invalid user data')
   }
   const user = await collections?.users?.findOne({ _id: new ObjectId(req.params.id) })
   if (!user) {
     res.status(400)
-    return
+    throw new Error('Invalid user data')
   }
 
   if (user.type === "Vendor") {

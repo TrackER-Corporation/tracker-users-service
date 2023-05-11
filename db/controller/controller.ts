@@ -91,7 +91,7 @@ export const getUserById = asyncHandler(async (req: any, res: any) => {
   let myQuery = { _id: new ObjectId(req.params.id) };
   const user = await collections?.users?.findOne(myQuery);
   if (!user) {
-
+    throw Error('Invalid user data')
   } else {
     res.status(200).json(user)
   }

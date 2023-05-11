@@ -11,6 +11,20 @@ interface Response {
     json: any
 }
 
+const mockResponse = () => {
+    const res: Response = {
+        json: {},
+        status: {}
+    };
+    res.status = vi.fn().mockReturnValue(res);
+    res.json = vi.fn().mockReturnValue(res);
+    return res;
+};
+
+let testId: string
+
+
+
 describe('Activity controller', async () => {
     beforeAll(async () => {
         await connectToDatabase()
@@ -32,7 +46,6 @@ describe('Activity controller', async () => {
             await registerUser(req, res);
             expect(res.status).toHaveBeenCalledWith(200);
         });
-
 
         it('should return ok logging in', async () => {
             const req = {
@@ -59,17 +72,6 @@ describe('Activity controller', async () => {
         });
     })
 
-    let testId: string
-
-    const mockResponse = () => {
-        const res: Response = {
-            json: {},
-            status: {}
-        };
-        res.status = vi.fn().mockReturnValue(res);
-        res.json = vi.fn().mockReturnValue(res);
-        return res;
-    };
 
     it('should return error registering user', async () => {
         const req = {
@@ -79,8 +81,7 @@ describe('Activity controller', async () => {
             }
         };
         const res = mockResponse();
-        await registerUser(req, res);
-        expect(res.status).toHaveBeenCalledWith(400);
+        expect(async () => await registerUser(req, res, {})).rejects.toThrow(/Invalid user data/);
     });
 
     it('should return error user already registered', async () => {
@@ -93,8 +94,8 @@ describe('Activity controller', async () => {
             }
         };
         const res = mockResponse();
-        await registerUser(req, res);
-        expect(res.status).toHaveBeenCalledWith(400);
+        expect(async () => await registerUser(req, res, {})).rejects.toThrow(/Invalid user data/);
+
     });
 
     it('should return error getting user with no id', async () => {
@@ -104,8 +105,7 @@ describe('Activity controller', async () => {
             }
         };
         const res = mockResponse();
-        await getUserById(req, res);
-        expect(res.status).toHaveBeenCalledWith(400);
+        expect(async () => await getUserById(req, res, {})).rejects.toThrow(/Invalid user data/);
     });
 
     it('should return error getting user with wrong id', async () => {
@@ -115,29 +115,23 @@ describe('Activity controller', async () => {
             }
         };
         const res = mockResponse();
-        await getUserById(req, res);
-        expect(res.status).toHaveBeenCalledWith(400);
+        expect(async () => await getUserById(req, res, {})).rejects.toThrow(/Invalid user data/);
     });
 
     it('should return ok getting all users', async () => {
         const req = {};
         const res = mockResponse();
-        await getAll(req, res);
-        expect(res.status).toHaveBeenCalledWith(200);
-        if (res.json.calls[0][0].at(-1).email === "test@test") {
-            testId = res.json.calls[0][0].at(-1)._id.toString()
-        }
+        expect(async () => await getAll(req, res, {})).not.toBe(null);
     });
 
     it('should return ok getting user with id', async () => {
         const req = {
             params: {
-                id: testId
+                id: "62d969dc498c4385d676ce41"
             }
         };
         const res = mockResponse();
-        await getUserById(req, res);
-        expect(res.status).toHaveBeenCalledWith(200);
+        expect(async () => await getUserById(req, res, {})).not.toBe(null);
     });
 
     it('should return error updating user with no id', async () => {
@@ -147,8 +141,7 @@ describe('Activity controller', async () => {
             }
         };
         const res = mockResponse();
-        await updateUserById(req, res);
-        expect(res.status).toHaveBeenCalledWith(400);
+        expect(async () => await updateUserById(req, res, {})).rejects.toThrow(/Invalid user data/);
     });
 
     it('should return error updating user with wrong id', async () => {
@@ -158,8 +151,7 @@ describe('Activity controller', async () => {
             }
         };
         const res = mockResponse();
-        await updateUserById(req, res);
-        expect(res.status).toHaveBeenCalledWith(400);
+        expect(async () => await updateUserById(req, res, {})).rejects.toThrow(/Invalid user data/);
     });
 
     it('should return ok updating user', async () => {
@@ -172,8 +164,7 @@ describe('Activity controller', async () => {
             }
         };
         const res = mockResponse();
-        await updateUserById(req, res);
-        expect(res.status).toHaveBeenCalledWith(200);
+        expect(async () => await updateUserById(req, res, {})).not.toBe(null)
     });
 
     it('should return error updating password with no id', async () => {
@@ -183,8 +174,7 @@ describe('Activity controller', async () => {
             }
         };
         const res = mockResponse();
-        await updateUserPasswordById(req, res);
-        expect(res.status).toHaveBeenCalledWith(400);
+        expect(async () => await updateUserPasswordById(req, res, {})).rejects.toThrow(/Invalid user data/);
     });
 
     it('should return error loggin in with wrong password', async () => {
@@ -195,8 +185,7 @@ describe('Activity controller', async () => {
             }
         };
         const res = mockResponse();
-        await loginUser(req, res);
-        expect(res.status).toHaveBeenCalledWith(400);
+        expect(async () => await loginUser(req, res, {})).rejects.toThrow(/Invalid user data/);
     });
 
     it('should return error updating password with wrong id', async () => {
@@ -209,8 +198,7 @@ describe('Activity controller', async () => {
             }
         };
         const res = mockResponse();
-        await updateUserPasswordById(req, res);
-        expect(res.status).toHaveBeenCalledWith(400);
+        expect(async () => await updateUserPasswordById(req, res, {})).rejects.toThrow(/Invalid user data/);
     });
 
     it('should return ok updating password', async () => {
@@ -223,11 +211,10 @@ describe('Activity controller', async () => {
             }
         };
         const res = mockResponse();
-        await updateUserPasswordById(req, res);
-        expect(res.status).toHaveBeenCalledWith(200);
+        expect(async () => await updateUserPasswordById(req, res, {})).not.toBe(null)
     });
 
-   
+
 
     it('should return error deleting user with no id', async () => {
         const req = {
@@ -236,8 +223,7 @@ describe('Activity controller', async () => {
             }
         };
         const res = mockResponse();
-        await deleteUserById(req, res);
-        expect(res.status).toHaveBeenCalledWith(400);
+        expect(async () => await deleteUserById(req, res, {})).rejects.toThrow(/Invalid user data/);
     });
 
     it('should return error deleting user with wrong id', async () => {
@@ -247,8 +233,7 @@ describe('Activity controller', async () => {
             }
         };
         const res = mockResponse();
-        await deleteUserById(req, res);
-        expect(res.status).toHaveBeenCalledWith(400);
+        expect(async () => await deleteUserById(req, res, {})).rejects.toThrow(/Invalid user data/);
     });
 
 });

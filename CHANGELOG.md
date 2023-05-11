@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.1.1](https://github.com/TrackER-Corporation/tracker-users-service/compare/v1.1.0...v1.1.1) (2023-05-11)
+
+
+### Bug Fixes
+
+* add missing throw error ([2cdd647](https://github.com/TrackER-Corporation/tracker-users-service/commit/2cdd647a77a466d2cef167ef83323410d3d9375e))
+* add throw error to api calls ([ba50c53](https://github.com/TrackER-Corporation/tracker-users-service/commit/ba50c53bc28031eea44a7b6c060ca1752eacb36c))
+* code smell ([1c8edf0](https://github.com/TrackER-Corporation/tracker-users-service/commit/1c8edf06c89094ab52bbc76f88a9a1d9780663cc))
+* return statement to throw error ([1f8e109](https://github.com/TrackER-Corporation/tracker-users-service/commit/1f8e109329e8b70101b402edbf47126d2ffe31df))
+
 ## [1.1.0](https://github.com/TrackER-Corporation/tracker-users-service/compare/v1.0.0...v1.1.0) (2023-05-02)
 
 

@@ -16,10 +16,7 @@ export const registerUser = asyncHandler(async (req: any, res: any) => {
 
   // Check if user exists
   const userExists = await collections?.users?.findOne({ email: email })
-  if (userExists != null) {
-    
-    throw Error('Invalid user data')
-  }
+  if (userExists != null) throw Error('Invalid user data')
 
   // Hash password
   const salt = await bcrypt.genSalt(10)
@@ -68,7 +65,6 @@ export const loginUser = asyncHandler(async (req: any, res: any) => {
       type: user.type
     })
   } else {
-    
     throw Error('Invalid user data')
   }
 })
@@ -89,13 +85,13 @@ const generateToken = (id: any) => {
 // Getting user By ID
 export const getUserById = asyncHandler(async (req: any, res: any) => {
   if (!req.params.id) {
-    
+
     throw Error('Invalid user data')
   }
   let myQuery = { _id: new ObjectId(req.params.id) };
   const user = await collections?.users?.findOne(myQuery);
   if (!user) {
-    
+
   } else {
     res.status(200).json(user)
   }
@@ -106,19 +102,19 @@ export const getUserById = asyncHandler(async (req: any, res: any) => {
 // @access  Private
 export const updateUserById = asyncHandler(async (req: any, res: any) => {
   if (!req.params.id) {
-    
+
     throw Error('Invalid user data')
   }
   const user = await collections?.users?.findOne(new ObjectId(req.params.id))
 
   if (!user) {
-    
+
     throw Error('Invalid user data')
   }
 
   // Make sure the logged in user matches the goal user
   if (user._id.toString() !== new ObjectId(req.params.id).toString()) {
-    
+
     throw Error('Invalid user data')
   }
   const updatedUser = await collections?.users?.findOneAndUpdate(
@@ -134,20 +130,20 @@ export const updateUserById = asyncHandler(async (req: any, res: any) => {
 // @access  Private
 export const updateUserPasswordById = asyncHandler(async (req: any, res: any) => {
   if (!req.params.id) {
-    
+
     throw Error('Invalid user data')
   }
   const { password } = req.body
   const user = await collections?.users?.findOne(new ObjectId(req.params.id))
 
   if (!user) {
-    
+
     throw Error('Invalid user data')
   }
 
   // Make sure the logged in user matches the goal user
   if (user._id.toString() !== new ObjectId(req.params.id).toString()) {
-    
+
     throw Error('Invalid user data')
   }
   const salt = await bcrypt.genSalt(10)
@@ -166,21 +162,19 @@ export const updateUserPasswordById = asyncHandler(async (req: any, res: any) =>
 // @access  Private
 export const deleteUserById = asyncHandler(async (req: any, res: any) => {
   if (!req.params.id) {
-    
+
     throw Error('Invalid user data')
   }
   const user = await collections?.users?.findOne({ _id: new ObjectId(req.params.id) })
-  if (!user) {
-    
-    throw Error('Invalid user data')
-  }
+  if (!user) throw Error('Invalid user data')
+
 
   if (user.type === "Vendor") {
-    fetch(`http://localhost:3000/api/organization/user/${req.params.id}`, { method: 'DELETE' }).catch(error => { })
+    fetch(`http://localhost:3000/api/organization/user/${req.params.id}`, { method: 'DELETE' }).catch(error => { throw Error('Invalid data') })
   } else {
-    fetch(`http://localhost:3000/api/buildings/user/${req.params.id}`, { method: 'DELETE' }).catch(error => { })
+    fetch(`http://localhost:3000/api/buildings/user/${req.params.id}`, { method: 'DELETE' }).catch(error => { throw Error('Invalid data') })
   }
-  fetch(`http://localhost:3000/api/preference/${req.params.id}`, { method: 'DELETE' }).catch(error => { })
+  fetch(`http://localhost:3000/api/preference/${req.params.id}`, { method: 'DELETE' }).catch(error => { throw Error('Invalid data') })
 
   await collections.users?.deleteOne({ _id: new ObjectId(req.params.id) });
   res.status(200).json({ id: req.params.id })
@@ -188,6 +182,6 @@ export const deleteUserById = asyncHandler(async (req: any, res: any) => {
 
 export const getAll = asyncHandler(async (req: any, res: any) => {
   const goal = await collections?.users?.find({}).toArray()
-  if (goal!.length > 0)
-    res.status(200).json(goal)
+  if (!goal) throw Error('Invalid user data')
+  res.status(200).json(goal)
 })

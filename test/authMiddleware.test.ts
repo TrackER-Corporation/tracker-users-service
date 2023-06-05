@@ -78,6 +78,6 @@ describe('protect middleware', () => {
             .mockReturnValue(decoded as any);
 
         await protect(req, res, next);
-        expect(verifyMock).toHaveBeenCalledWith("<token>", process.env.JWT_SECRET);
+        expect(verifyMock).toHaveBeenCalledWith("<token>", "12345abcd");
     });
 });

@@ -77,7 +77,7 @@ export const getMe = asyncHandler(async (req: any, res: any) => {
 })
 
 // Generate JWT
-const generateToken = (id: any) => {
+export const generateToken = (id: any) => {
   return jwt.sign({ id }, process.env.JWT_SECRET as string, {
     expiresIn: '30d',
   })
@@ -108,13 +108,11 @@ export const updateUserById = asyncHandler(async (req: any, res: any) => {
   const user = await collections?.users?.findOne(new ObjectId(req.params.id))
 
   if (!user) {
-
     throw Error('Invalid user data')
   }
 
   // Make sure the logged in user matches the goal user
   if (user._id.toString() !== new ObjectId(req.params.id).toString()) {
-
     throw Error('Invalid user data')
   }
   const updatedUser = await collections?.users?.findOneAndUpdate(
@@ -130,7 +128,6 @@ export const updateUserById = asyncHandler(async (req: any, res: any) => {
 // @access  Private
 export const updateUserPasswordById = asyncHandler(async (req: any, res: any) => {
   if (!req.params.id) {
-
     throw Error('Invalid user data')
   }
   const { password } = req.body
@@ -162,12 +159,10 @@ export const updateUserPasswordById = asyncHandler(async (req: any, res: any) =>
 // @access  Private
 export const deleteUserById = asyncHandler(async (req: any, res: any) => {
   if (!req.params.id) {
-
     throw Error('Invalid user data')
   }
   const user = await collections?.users?.findOne({ _id: new ObjectId(req.params.id) })
   if (!user) throw Error('Invalid user data')
-
 
   if (user.type === "Vendor") {
     fetch(`http://localhost:3000/api/organization/user/${req.params.id}`, { method: 'DELETE' }).catch(error => { throw Error('Invalid data') })

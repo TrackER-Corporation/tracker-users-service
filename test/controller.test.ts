@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
-import { registerUser, loginUser, getUserById, updateUserById, deleteUserById, updateUserPasswordById, getAll } from "../db/controller/controller";
+import { registerUser, loginUser, getUserById, updateUserById, deleteUserById, updateUserPasswordById, getAll, generateToken } from "../db/controller/controller";
 import { collections, connectToDatabase } from "../db/services/database.service";
 import { ObjectId } from "mongodb";
 import dotenv from 'dotenv';
@@ -23,8 +23,6 @@ const mockResponse = () => {
 
 let testId: string
 
-
-
 describe('Activity controller', async () => {
     beforeAll(async () => {
         await connectToDatabase()
@@ -43,7 +41,7 @@ describe('Activity controller', async () => {
                 }
             };
             const res = mockResponse();
-            await registerUser(req, res);
+            await registerUser(req, res, {});
             expect(res.status).toHaveBeenCalledWith(200);
         });
 
@@ -55,7 +53,7 @@ describe('Activity controller', async () => {
                 }
             };
             const res = mockResponse();
-            await loginUser(req, res);
+            await loginUser(req, res, {});
             expect(res.status).toHaveBeenCalledWith(200);
         });
 
@@ -66,7 +64,7 @@ describe('Activity controller', async () => {
                 }
             };
             const res = mockResponse();
-            await deleteUserById(req, res);
+            await deleteUserById(req, res, {});
             expect(res.status).toHaveBeenCalledWith(200);
             await collections.users?.deleteOne({ _id: new ObjectId(testId) })
         });
@@ -214,8 +212,6 @@ describe('Activity controller', async () => {
         expect(async () => await updateUserPasswordById(req, res, {})).not.toBe(null)
     });
 
-
-
     it('should return error deleting user with no id', async () => {
         const req = {
             params: {
@@ -234,6 +230,16 @@ describe('Activity controller', async () => {
         };
         const res = mockResponse();
         expect(async () => await deleteUserById(req, res, {})).rejects.toThrow(/Invalid user data/);
+    });
+
+    it('should generateToken', async () => {
+        const req = {
+            params: {
+                id: "999999999999"
+            }
+        };
+        const res = mockResponse();
+        expect(generateToken("")).not.toBe(null)
     });
 
 });
